@@ -1,6 +1,6 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/presentation/widgets/movies/movie_rating.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -91,27 +91,15 @@ class _Slide extends StatelessWidget {
             width: 150,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.cover,
-                width: 150,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) {
-                    return const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      ),
-                    );
-                  }
-
-                  return GestureDetector(
-                    onTap: () => context.push('/movie/${movie.id}'),
-                    child: FadeInRight(child: child),
-                  );
-                },
+              child: GestureDetector(
+                onTap: () => context.push('/home/0/movie/${movie.id}'),
+                child: FadeInImage(
+                  height: 220,
+                  fit: BoxFit.cover,
+                  placeholder:
+                      const AssetImage('assets/loaders/bottle-loader.gif'),
+                  image: NetworkImage(movie.posterPath),
+                ),
               ),
             ),
           ),
@@ -129,28 +117,7 @@ class _Slide extends StatelessWidget {
           ),
 
           //* Rating
-          SizedBox(
-            width: 150,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.star_half_outlined,
-                  color: Colors.yellow.shade800,
-                ),
-                const SizedBox(width: 3),
-                Text(
-                  '${movie.voteAverage}',
-                  style: textStyles.bodyMedium
-                      ?.copyWith(color: Colors.yellow.shade800),
-                ),
-                const Spacer(),
-                Text(
-                  HumanFormats.number(movie.popularity),
-                  style: textStyles.bodySmall,
-                )
-              ],
-            ),
-          )
+          MovieRating(voteAverage: movie.voteAverage),
         ],
       ),
     );
